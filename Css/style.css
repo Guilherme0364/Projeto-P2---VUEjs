@@ -1,0 +1,31 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    margin: 0;
+}
+
+.pagina-completa {
+    display: flex;
+    flex: 1;
+}
+
+#sidebar {
+    width: 250px;
+    background: #6d7fcc;
+    color: white;
+}
+
+#content {
+    flex: 1;
+    padding: 20px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.titulo-app{
+    font-size: 28px;
+    margin: 0 0 0 35px;
+}

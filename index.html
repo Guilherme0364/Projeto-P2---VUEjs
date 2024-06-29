@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gerenciamento de Vendas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./Css/_base.css"> 
+    <link rel="stylesheet" href="./Css/style.css">
+    <link rel="stylesheet" href="./Css/sidebar.css">
+</head>
+<body>
+    
+    <div id="app" class="pagina-completa">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Gerenciamento de Vendas</h3>
+            </div>
+    
+            <ul class="list-unstyled components">
+                <p>CRUD | Projeto - P2</p>
+                <li>
+                    <a href="https://classroom.google.com/u/1/c/NjU4NDYzOTc2NjQ0/a/NjgyMjQ1MzU0NTI2/details" target="_blank">Sobre</a>
+                </li>
+                <li>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Páginas</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <a class="nav-link" :class="{ selecionado: abaAtiva === 'clientes' }" href="#" @click="abaAtiva = 'clientes'">Clientes</a>
+                        </li>
+                        <li>
+                            <a class="nav-link" :class="{ selecionado: abaAtiva === 'produtos' }" href="#" @click="abaAtiva = 'produtos'">Produtos</a>
+                        </li>
+                        <li>
+                            <a class="nav-link" :class="{ selecionado: abaAtiva === 'vendas' }" href="#" @click="abaAtiva = 'vendas'">Vendas</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+    
+            <ul class="list-unstyled CTAs">
+                <li>
+                    <a class="btn-sidebar" @click="limparCampos()">Limpar</a>
+                </li>
+                <li>
+                    <a class="btn-sidebar" @click="mudarExibicao()">Exibir listagem</a>
+                </li>
+            </ul>
+        </nav>
+    
+        <div id="content">
+    
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+    
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>                        
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+    
+                    <h1 class="titulo-app">Sistema de Gerenciamento de Vendas</h1>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" :class="{ selecionado: abaAtiva === 'clientes' }" href="#" @click="abaAtiva = 'clientes'">Clientes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" :class="{ selecionado: abaAtiva === 'produtos' }" href="#" @click="abaAtiva = 'produtos'">Produtos</a>
+                            <li class="nav-item">
+                                <a class="nav-link" :class="{ selecionado: abaAtiva === 'vendas' }" href="#" @click="abaAtiva = 'vendas'">Vendas</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+
+        <div v-if="abaAtiva === 'clientes'" class="mt-4">
+            <h2>Cadastro de clientes</h2>
+            <form @submit.prevent="validarCliente">
+                <div class="form-group">
+                    <label for="clienteNome">Nome:</label>
+                    <input type="text" id="clienteNome" class="form-control" v-model="novoCliente.nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="clienteEndereco">Endereço:</label>
+                    <input type="text" id="clienteEndereco" class="form-control" v-model="novoCliente.endereco" required>
+                </div>
+                <div class="form-group">
+                    <label for="clienteTelefone">Telefone:</label>
+                    <input type="text" id="clienteTelefone" class="form-control" v-model="novoCliente.telefone" required>
+                </div>
+                <div class="form-group">
+                    <label for="clienteTelefone">CPF:</label>
+                    <input type="text" id="clienteCPF" class="form-control" v-model="novoCliente.cpf" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Cadastrar cliente</button>
+            </form>
+
+            <br>
+
+            <div v-if="clientes.length > 0 && exibirListagem === true">
+                <h2 class="mt-4">Listagem de clientes cadastrados</h2>
+                <div>Total de clientes: {{ totalClientes }}</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Endereço</th>
+                            <th>Telefone</th>
+                            <th>CPF</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="cliente in clientes" :key="cliente.id">
+                            <td>{{ cliente.nome }}</td>
+                            <td>{{ cliente.endereco }}</td>
+                            <td>{{ cliente.telefone }}</td>
+                            <td>{{ cliente.cpf }}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm" @click="editarCliente(cliente)">
+                                    <img src="./Css/Assets/lapis.png" alt="Ícone de uma caneta">
+                                </button>
+                                <button class="btn btn-danger btn-sm" @click="confirmarExclusao(cliente.id, 'cliente')">
+                                    <img src="./Css/Assets/lixeira-xmark.png" alt="Ícone de uma lixeira">
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div v-if="abaAtiva === 'produtos'" class="mt-4">
+            <h2>Cadastro de produtos</h2>
+            <form @submit.prevent="validarProduto">
+                <div class="form-group">
+                    <label for="produtoNome">Nome:</label>
+                    <input type="text" id="produtoNome" class="form-control" v-model="novoProduto.nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="produtoDescricao">Descrição:</label>
+                    <input type="text" id="produtoDescricao" class="form-control" v-model="novoProduto.descricao" required>
+                </div>
+                <div class="form-group">
+                    <label for="produtoPreco">Preço:</label>
+                    <input type="number" id="produtoPreco" class="form-control" v-model="novoProduto.preco" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Produto</button>
+            </form>
+
+            <br>
+
+            <div v-if="produtos.length > 0 && exibirListagem === true">
+                <h2 class="mt-4">Listagem de produtos</h2>
+                <div>Total de produtos cadastrados: {{ totalProdutos }}</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="produto in produtos" :key="produto.id">
+                            <td>{{ produto.nome }}</td>
+                            <td>{{ produto.descricao }}</td>
+                            <td>{{ produto.preco }}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm" @click="editarProduto(produto)">
+                                    <img src="./Css/Assets/lapis.png" alt="Ícone de uma caneta">
+                                </button>
+                                <button class="btn btn-danger btn-sm" @click="confirmarExclusao(produto.id, 'produto')">
+                                    <img src="./Css/Assets/lixeira-xmark.png" alt="Ícone de uma lixeira">
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div v-if="abaAtiva === 'vendas'" class="mt-4">
+            <h2>Cadastro de vendas realizadas</h2>
+            <form @submit.prevent="validarVenda">
+                <div class="form-group">
+                    <label for="vendaCliente">Cliente:</label>
+                    <select id="vendaCliente" class="form-control" v-model="novaVenda.idCliente" required>
+                        <option v-for="cliente in clientes" :value="cliente.id">{{ cliente.nome }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="vendaProduto">Produto:</label>
+                    <select id="vendaProduto" class="form-control" v-model="novaVenda.idProduto" required>
+                        <option v-for="produto in produtos" :value="produto.id">{{ produto.nome }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="vendaQuantidade">Quantidade:</label>
+                    <input type="number" id="vendaQuantidade" class="form-control" v-model="novaVenda.quantidade" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar Venda</button>
+            </form>
+        
+            <br>
+        
+            <div v-if="vendas.length > 0 && exibirListagem === true">
+                <h2 class="mt-4">Listagem de vendas realizadas</h2>
+                <div>Total de vendas cadastradas: {{ totalVendas }}</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Valor Total</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="venda in vendas" :key="venda.id">
+                            <td>{{ obterNomeCliente(venda.idCliente) }}</td>
+                            <td>{{ obterNomeProduto(venda.idProduto) }}</td>
+                            <td>{{ venda.quantidade }}</td>
+                            <td>{{ calcularValorTotal(venda.idProduto, venda.quantidade) }}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" @click="confirmarExclusao(venda.id, 'venda')">
+                                    <img src="./Css/Assets/lixeira-xmark.png" alt="Ícone de uma lixeira">
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+    </div>
+
+    <script src="app.js"></script>
+        <!-- jQuery CDN - Slim version (=without AJAX) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <!-- Popper.JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+                });
+            });
+        </script>
+</body>
+</html>
